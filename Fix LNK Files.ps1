@@ -19,13 +19,18 @@ ForEach($shortcut in $shortcuts)
     $target = $sh.CreateShortcut("$shortcutpath").TargetPath
     #Check if the target path exists
     write-host "Checking: $directoryname"
+
+    If($target -ne $null -and $target -ne "")
+    {
+
     If(Test-path $target)
     {
         #Replace the source path with the target path
         $newpath = $directoryname.replace("$consource","C:\ProgramData\Microsoft\Windows\Start Menu\Programs")
         #Copy the shortcut to the new location
         write-host "Found path $target, copying $shortcutpath to $newpath"
-        copy-item -path $shortcutpath -destination "$newpath" -Force
+        try{copy-item -path $shortcutpath -destination "$newpath" -Force}catch{}
+    }
     }
 }
 
@@ -60,7 +65,7 @@ ForEach($line in $taskbandarr)
             {
                 $shortcutpath = $shortcut.FullName
                 #Copy the file
-                copy-item -path $shortcutpath
+                try{copy-item -path $shortcutpath}catch{}
             }
     }
 
